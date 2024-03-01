@@ -1,38 +1,21 @@
 """
-This is a hello world add-on for DocumentCloud.
-
-It demonstrates how to write a add-on which can be activated from the
-DocumentCloud add-on system and run using Github Actions.  It receives data
-from DocumentCloud via the request dispatch and writes data back to
-DocumentCloud using the standard API
+Simple Add-On to count the number of pages in a document set
 """
 
 from documentcloud.addon import AddOn
 
 
-class HelloWorld(AddOn):
-    """An example Add-On for DocumentCloud."""
+class PageCounter(AddOn):
+    """Counts pages in a document set and displays it"""
 
     def main(self):
-        """The main add-on functionality goes here."""
-        # fetch your add-on specific data
-        name = self.data.get("name", "world")
-
-        self.set_message("Hello World start!")
+        """ For each page take the page count and add it to tally"""
+        page_count=0
 
         # add a hello note to the first page of each selected document
         for document in self.get_documents():
-            # get_documents will iterate through all documents efficiently,
-            # either selected or by query, dependeing on which is passed in
-            document.annotations.create(f"Hello {name}!", 0)
-
-        with open("hello.txt", "w+") as file_:
-            file_.write("Hello world!")
-            self.upload_file(file_)
-
-        self.set_message("Hello World end!")
-        self.send_mail("Hello World!", "We finished!")
-
+            page_count += document.page_count
+        self.set_message(f"This document set is comprised of {page_count} pages")
 
 if __name__ == "__main__":
-    HelloWorld().main()
+    PageCounter().main()
