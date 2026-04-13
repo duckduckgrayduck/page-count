@@ -10,6 +10,7 @@ class PageCounter(AddOn):
 
     def main(self):
         """ For each page take the page count and add it to tally"""
+        self.client.session.headers.update({'User-Agent': 'Page Counter Add-On'})
         page_count=0
 
         # add a hello note to the first page of each selected document
